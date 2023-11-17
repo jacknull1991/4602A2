@@ -1,0 +1,108 @@
+@page "/categories"
+@inject AdminService adminService
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Setting - Transaction Types</PageTitle>
+
+<h1>Setting - Transaction Types (Categories)</h1>
+@if (errorMessage != null && errorMessage != "")
+{
+<div class="alert alert-danger col-md-8" role="alert">
+    @errorMessage
+</div>    
+}
+@if (transactionTypes == null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+<div class="col-md-8">
+    <button class="btn btn-primary" @onclick="AddRow"><span class="oi oi-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add Category</button>
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in transactionTypes)
+            {
+                <tr>
+                    <td>@t.Name</td>
+                    <td>@t.Description</td>
+                    <td>
+                        <a class="btn btn-success btn-sm py-0" href="/categories/edit/@t.TransactionTypeId"><span class="oi oi-pencil" aria-hidden="true"></span></a>
+                        <button class="btn btn-danger btn-sm py-0" @onclick="()=>HandleDelete(t.TransactionTypeId)"><span class="oi oi-trash" aria-hidden="true"></span></button>
+                    </td>
+                </tr>
+            }
+            @if (newTransactionType != null) {
+                <tr>
+                    <td>
+                        <input type="text" class="form-control" @bind="newTransactionType.Name" placeholder="Enter category name..." required/>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" @bind="newTransactionType.Description" placeholder="Enter description..." required/>
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm py-0" @onclick="HandleAdd"><span class="oi oi-circle-check" aria-hidden="true"></span></button>
+                        <button class="btn btn-danger btn-sm py-0" @onclick="RemoveRow"><span class="oi oi-circle-x" aria-hidden="true"></span></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+@code {
+    List<TransactionType>? transactionTypes;
+
+    private TransactionType? newTransactionType = null;
+
+    private string? errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        transactionTypes = await adminService.GetTransactionTypesAsync();
+    }
+
+    private void AddRow() 
+    {
+        if (newTransactionType == null)
+            newTransactionType = new TransactionType();
+    }
+
+    private void RemoveRow()
+    {
+        newTransactionType = null;
+    }
+
+    private async Task HandleAdd() {
+        if (newTransactionType != null && newTransactionType.Name != null && newTransactionType.Description != null) {
+            try {
+                await adminService.AddTransactionTypeAsync(newTransactionType);
+                transactionTypes = await adminService.GetTransactionTypesAsync();
+                newTransactionType = null;
+                errorMessage = "";
+            } catch (Exception e) {
+                errorMessage = e.Message;
+            }
+        } else {
+            errorMessage = "Please fill in all fields.";
+        }
+    }
+
+    private async Task HandleDelete(int id)
+    {
+        try {
+            await adminService.DeleteTransactionTypeAsync(id);
+            transactionTypes = await adminService.GetTransactionTypesAsync();
+        } catch (Exception e) {
+            errorMessage = e.Message;
+        }
+    }
+}

@@ -1,0 +1,105 @@
+@page "/donations/add"
+@inject FinanceService financeService
+@inject AdminService adminService
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin, Finance")]
+
+<PageTitle>Add Donation</PageTitle>
+
+<h1>New Donation</h1>
+<hr />
+
+@if (errorMessage != null && errorMessage != "")
+{
+<div class="alert alert-danger col-md-4" role="alert">
+    @errorMessage
+</div>    
+}
+
+<EditForm Model="@donation" OnValidSubmit="HandleSubmit" class="col-md-4">
+
+    <div class="form-group">
+        <label for="AccountNo">Donor</label>
+        <InputSelect id="AccountNo" class="form-control" @bind-Value="donation.AccountNo" required>
+            <option value="">-- Select Donor --</option>
+            @foreach (var c in contacts)
+            {
+                <option value="@c.AccountNo">@c.FirstName @c.LastName</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="TransactionTypeId">Category</label>
+        <InputSelect id="TransactionTypeId" class="form-control" @bind-Value="donation.TransactionTypeId" required>
+            <option value="">-- Select Category --</option>
+            @foreach (var t in transactionTypes)
+            {
+                <option value="@t.TransactionTypeId">@t.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="PaymentMethodId">Payment Method</label>
+        <InputSelect id="PaymentMethodId" class="form-control" @bind-Value="donation.PaymentMethodId" required>
+            <option value="">-- Select Payment Method --</option>
+            @foreach (var t in paymentMethods)
+            {
+                <option value="@t.PaymentMethodId">@t.Name</option>
+            }
+        </InputSelect>
+    </div>
+    
+    <div class="form-group">
+        <label for="Amount">Amount</label>
+        <InputNumber id="Amount" class="form-control" @bind-Value="donation.Amount" required min="0.01" max="1000000000"/>
+    </div>
+
+    <div class="form-group">
+        <label for="Date">Date</label>
+        <InputDate id="Date" class="form-control" @bind-Value="donation.Date" required/>
+    </div>
+
+    <div class="form-group">
+        <label for="Notes">Notes</label>
+        <InputTextArea id="Notes" class="form-control" @bind-Value="donation.Notes" rows=5/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+</EditForm>
+
+@code {
+    private Donation donation = new Donation();
+    private List<Contact> contacts = new List<Contact>();
+    private List<TransactionType> transactionTypes = new List<TransactionType>();
+    private List<PaymentMethod> paymentMethods = new List<PaymentMethod>();
+
+    private string? errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        contacts = await adminService.GetContactsAsync();
+        transactionTypes = await adminService.GetTransactionTypesAsync();
+        paymentMethods = await adminService.GetPaymentMethodsAsync();
+    }
+
+    private async Task HandleSubmit()
+    {
+        try {
+            await financeService.AddDonationAsync(donation);
+            navigationManager.NavigateTo("/donations");
+        } catch (Exception ex) {
+            errorMessage += ex.Message;
+        }
+    }
+
+    private void HandleCancel()
+    {
+        navigationManager.NavigateTo("/donations");
+    }
+}

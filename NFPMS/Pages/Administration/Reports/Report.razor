@@ -1,0 +1,66 @@
+@page "/reports/yearlyreport"
+@inject AdminService adminService
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Yearly Report</PageTitle>
+
+<h1>Yearly Report</h1>
+<hr />
+
+@* <InputText @bind-Value="year" /> *@
+@if (report == null) {
+<p>Loading...</p>
+}
+else 
+{
+<div class="d-flex flex-column col-md-8 border border-1 p-4 mb-4">
+    <div class="align-self-center"><h2>NFP Charity Organization</h2></div>
+    <div class="align-self-center"><span>1234 Main Street, Vancouver</span></div>
+    <div class="align-self-end"><span>Document Date: @DateTime.Now.ToString("dd MMMM yyyy")</span></div>
+    <div class="align-self-end"><span>Total Donations: @string.Format("{0:C}", report.TotalDonations)</span></div>
+    <hr/>
+    <div class="align-self-center"><h3>Donations by months</h3></div>
+    @foreach(var item in report.DonationsByMonth!)
+    {
+        <div class="align-self-start d-flex flex-row w-100">
+            <div>@item.Key</div>
+            <div class="ms-auto">@string.Format("{0:C}", item.Value)</div>
+        </div>
+    }
+    <hr/>
+    <div class="align-self-center"><h3>Donations by categories</h3></div>
+    @foreach(var item in report.DonationsByCategory!)
+    {
+        <div class="align-self-start d-flex flex-row w-100">
+            <div>@item.Key</div>
+            <div class="ms-auto">@string.Format("{0:C}", item.Value)</div>
+        </div>
+    }
+    <hr/>
+    <div class="align-self-center"><h3>Donations by payment type</h3></div>
+    @foreach(var item in report.DonationsByPaymentType!)
+    {
+        <div class="align-self-start d-flex flex-row w-100">
+            <div>@item.Key</div>
+            <div class="ms-auto">@string.Format("{0:C}", item.Value)</div>
+        </div>
+    }
+</div>
+
+}
+
+
+@code 
+{
+    private int year = DateTime.Now.Year;
+
+    private YearlyReport? report;
+
+    protected override async Task OnInitializedAsync()
+    {
+        report = await adminService.GetYearlyReportAsync(year);
+    }
+
+
+}

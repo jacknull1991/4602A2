@@ -1,0 +1,62 @@
+@page "/contacts"
+@inject AdminService adminService
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Contacts</PageTitle>
+
+<h1>Contacts List</h1>
+
+@if (contacts == null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+<a href="/contacts/add" class="btn btn-primary"><span class="oi oi-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add Contact</a>
+
+<table class="table table-hover table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Account No.</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Postal Code</th>
+            <th>Country</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contact in contacts)
+        {
+            <tr>
+                <td>@contact.AccountNo</td>
+                <td>@contact.FirstName</td>
+                <td>@contact.LastName</td>
+                <td>@contact.Email</td>
+                <td>@contact.Street, @contact.City</td>
+                <td>@contact.PostalCode</td>
+                <td>@contact.Country</td>
+                <td>
+                    <a class="btn btn-light btn-sm py-0" href="/reports/receipts/@contact.AccountNo"><span class="oi oi-document" aria-hidden="true"></span>Receipts</a>
+                </td>
+                <td>
+                    <a class="btn btn-success btn-sm py-0" href="/contacts/edit/@contact.AccountNo"><span class="oi oi-pencil" aria-hidden="true"></span></a>
+                    <a class="btn btn-danger btn-sm py-0" href="/contacts/delete/@contact.AccountNo"><span class="oi oi-trash" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+@code {
+    List<Contact>? contacts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contacts = await adminService.GetContactsAsync();
+    }
+}

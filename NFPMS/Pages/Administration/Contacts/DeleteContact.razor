@@ -1,0 +1,86 @@
+@page "/contacts/delete/{id:int}"
+@inject AdminService adminService
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Delete Contact</PageTitle>
+
+<h1>Delete Contact</h1>
+<hr />
+
+@if (errorMessage != null && errorMessage != "")
+{
+<div class="alert alert-danger col-md-4" role="alert">
+    @errorMessage
+</div>    
+}
+
+@if (contact == null) {
+
+<p>Contact with ID == @Id not found</p>
+
+} else {
+<style>
+fieldset {
+    border: 2px solid #000;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+fieldset span {
+    font-weight: bold;
+}
+</style>
+
+<fieldset class="col-md-4">
+    <legend>Contact Information</legend>
+    <p><span>Account Number</span>: @contact.AccountNo</p>
+    <p><span>First Name</span>: @contact.FirstName</p>
+    <p><span>Last Name</span>: @contact.LastName</p>
+    <p><span>Email</span>: @contact.Email</p>
+    <p><span>Address</span>: @contact.Street, @contact.City @contact.PostalCode</p>
+    <p><span>Country</span>: @contact.Country</p>
+</fieldset>
+
+<p>This donation record will be deleted forever.</p>
+<button type="button" class="btn btn-danger" @onclick="HandleDelete">Delete</button>
+<button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
+
+}
+
+
+
+
+@code 
+{
+    [Parameter]
+    public int Id { get; set; }
+    private Contact? contact = new Contact();
+    private string? errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try {
+            contact = await adminService.GetContactByIdAsync(Id);
+            if (contact == null) {
+                throw new Exception($"Contact with ID = {Id} not found");
+            }
+        } catch (Exception ex) {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        try {
+            await adminService.DeleteContactAsync(Id);
+            navigationManager.NavigateTo("/contacts");
+        } catch (Exception ex) {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private void HandleCancel()
+    {
+        navigationManager.NavigateTo("/contacts");
+    }
+}
