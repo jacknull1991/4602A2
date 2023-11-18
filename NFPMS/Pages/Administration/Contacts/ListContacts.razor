@@ -1,6 +1,7 @@
 @page "/contacts"
 @inject AdminService adminService
 @inject IDialogService DialogService
+@inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Contacts</PageTitle>
@@ -32,6 +33,9 @@
                     <MudStack Row>
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                        <MudTooltip Text="Show Tax Receipts">
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Article" OnClick="@((e) => HandleTaxReceipts(context.Item))"/>
+                        </MudTooltip>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -112,5 +116,10 @@
         if (!result.Canceled) {
             contacts!.Remove(contact);
         }
+    }
+
+    void HandleTaxReceipts(Contact contact)
+    {
+        NavigationManager.NavigateTo($"/reports/receipts/{contact.AccountNo}");
     }
 }
