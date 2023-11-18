@@ -1,0 +1,100 @@
+@inject AdminService adminService
+@inject FinanceService financeService
+
+<EditForm Model="Donation" OnValidSubmit="Submit">
+<MudDialog Style="width: 560px;">
+    <TitleContent>
+        @if (Mode == "edit") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1"/>Edit donation info </MudText>
+        } else if (Mode == "del") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>Delete this donation record?</MudText>
+        } else {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>New donation</MudText>
+        }
+        @if (errorMessage != null && errorMessage != "") { 
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-3" Elevation="0" Icon="@Icons.Material.Filled.ErrorOutline">
+                @errorMessage
+            </MudAlert>
+        }
+    </TitleContent>
+    <DialogContent>
+        <MudSelect T="int?" @bind-Value="@Donation.AccountNo" Label="Donor" AnchorOrigin="Origin.BottomCenter" Required=true>
+            @foreach (var c in contacts) {
+                <MudSelectItem T="int?" Value="@c.AccountNo">@c.FirstName @c.LastName: @c.AccountNo</MudSelectItem>
+            }
+        </MudSelect>
+        <ValidationMessage For="@(() => Donation.AccountNo)" />
+
+        <MudSelect T="int?" @bind-Value="@Donation.TransactionTypeId" Label="Transaction Type" AnchorOrigin="Origin.BottomCenter" Required=true>
+            @foreach (var t in transactionTypes) {
+                <MudSelectItem T="int?" Value="@t.TransactionTypeId">@t.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <ValidationMessage For="@(() => Donation.TransactionTypeId)" />
+
+        <MudSelect T="int?" @bind-Value="@Donation.PaymentMethodId" Label="Payment Method" AnchorOrigin="Origin.BottomCenter" Required=true>
+            @foreach (var p in paymentMethods) {
+                <MudSelectItem T="int?" Value="@p.PaymentMethodId">@p.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <ValidationMessage For="@(() => Donation.PaymentMethodId)" />
+
+        <MudNumericField @bind-Value="Donation.Amount" Label="Amount" Format="N2" Variant="Variant.Text" Min="0.01M" Max="1000000000.0M" HideSpinButtons="true" Required=true/>
+        <ValidationMessage For="@(() => Donation.Amount)" />
+
+        <MudDatePicker @bind-Date="Donation.Date" Label="Date" ShowWeekNumbers="true" Required=true/>
+        <ValidationMessage For="@(() => Donation.Date)" />
+
+        <MudTextField @bind-Value="Donation.Notes" Label="Notes" ReadOnly="@(Mode=="del")" />
+        <ValidationMessage For="@(() => Donation.Notes)" />
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@if (Mode != "del") {
+<DataAnnotationsValidator />
+}
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public Donation Donation { get; set; } = new Donation();
+    [Parameter] public string? Mode { get; set; }
+    private List<Contact> contacts = new List<Contact>();
+    private List<TransactionType> transactionTypes = new List<TransactionType>();
+    private List<PaymentMethod> paymentMethods = new List<PaymentMethod>();
+    private string? errorMessage = "";
+    protected override async Task OnInitializedAsync()
+    {
+        contacts = await adminService.GetContactsAsync();
+        transactionTypes = await adminService.GetTransactionTypesAsync();
+        paymentMethods = await adminService.GetPaymentMethodsAsync();
+    }
+
+    private void Cancel()
+    {
+        MudDialog!.Cancel();
+    }
+
+    private async Task Submit()
+    {
+        try {
+            if (Mode == "edit") {
+                await financeService.UpdateDonationAsync(Donation);
+            } else if (Mode == "del") {
+                await financeService.DeleteDonationAsync(Donation.TransactionId);
+            } else if (Mode == "add"){
+                await financeService.AddDonationAsync(Donation);
+            } else {
+                throw new Exception("Invalid action");
+            }
+            MudDialog!.Close(DialogResult.Ok(Donation));
+        } catch (Exception ex) {
+            errorMessage = ex.Message;
+        }
+    }
+}

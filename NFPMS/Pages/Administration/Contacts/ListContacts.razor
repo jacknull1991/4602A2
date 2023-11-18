@@ -1,62 +1,116 @@
 @page "/contacts"
 @inject AdminService adminService
+@inject IDialogService DialogService
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Contacts</PageTitle>
-
-<h1>Contacts List</h1>
-
-@if (contacts == null)
-{
-<p><em>Loading...</em></p>
-}
-else
-{
-<a href="/contacts/add" class="btn btn-primary"><span class="oi oi-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add Contact</a>
-
-<table class="table table-hover table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Account No.</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Postal Code</th>
-            <th>Country</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var contact in contacts)
-        {
-            <tr>
-                <td>@contact.AccountNo</td>
-                <td>@contact.FirstName</td>
-                <td>@contact.LastName</td>
-                <td>@contact.Email</td>
-                <td>@contact.Street, @contact.City</td>
-                <td>@contact.PostalCode</td>
-                <td>@contact.Country</td>
-                <td>
-                    <a class="btn btn-light btn-sm py-0" href="/reports/receipts/@contact.AccountNo"><span class="oi oi-document" aria-hidden="true"></span>Receipts</a>
-                </td>
-                <td>
-                    <a class="btn btn-success btn-sm py-0" href="/contacts/edit/@contact.AccountNo"><span class="oi oi-pencil" aria-hidden="true"></span></a>
-                    <a class="btn btn-danger btn-sm py-0" href="/contacts/delete/@contact.AccountNo"><span class="oi oi-trash" aria-hidden="true"></span></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-}
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Color="Color.Inherit" Typo="Typo.h5">Contacts</MudText>
+    <MudDataGrid T="Contact" Items="@contacts" Dense=true Hover=true Bordered=true Striped=true 
+        QuickFilter="@SearchFilter" ColumnResizeMode="@ResizeMode.Column">
+        <ToolBarContent>
+            <MudButton OnClick="@AddItem" Color="@Color.Success" Class="add-item-btn mr-5">Add Contact</MudButton>
+            <MudSwitch @bind-Checked="@_showAll" Color="Color.Info" Label="Show Timestamps"/>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.AccountNo" Title="Account Number" />
+            <PropertyColumn Property="x => x.FirstName" Title="First Name" />
+            <PropertyColumn Property="x => x.LastName" Title="Last Name" />
+            <PropertyColumn Property="x => x.Email" Title="Email" />
+            <PropertyColumn Property="x => x.Street + ' ' + x.City" Title="Address" />
+            <PropertyColumn Property="x => x.Country" Title="Country" />
+            <PropertyColumn Property="x => x.PostalCode" Title="Postal Code" />
+            <PropertyColumn Property="x => x.Created" Title="Created" Hidden="@(!_showAll)" />
+            <PropertyColumn Property="x => x.CreatedBy" Title="Created By" Hidden="@(!_showAll)" />
+            <PropertyColumn Property="x => x.Modified" Title="Last Modified" Hidden="@(!_showAll)" />
+            <PropertyColumn Property="x => x.ModifiedBy" Title="Last Modified By" Hidden="@(!_showAll)" />
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
 
 @code {
-    List<Contact>? contacts;
+    private List<Contact>? contacts = new List<Contact>();
+    private string? _searchString = "";
+    private bool _showAll = false;
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
         contacts = await adminService.GetContactsAsync();
+    }
+
+    private Func<Contact, bool> SearchFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+        if (x.LastName!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (x.FirstName!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (x.Email!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (x.Street!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (x.City!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (x.Country!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (x.PostalCode!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    async Task AddItem() 
+    {
+        var parameters = new DialogParameters<ContactDialog>();
+        parameters.Add("Contact", new Contact());
+        parameters.Add("Mode", "add");
+
+        var dialog = await DialogService.ShowAsync<ContactDialog>("Add Contact", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            contacts!.Add((Contact) result.Data);
+        }
+    }
+
+    async Task HandleEdit(Contact contact)
+    {
+        var parameters = new DialogParameters<ContactDialog>();
+        var copy = new Contact(contact);
+        parameters.Add("Contact", copy);
+        parameters.Add("Mode", "edit");
+
+        var dialog = await DialogService.ShowAsync<ContactDialog>("Edit Contact Info", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            contact = copy;
+        }
+    }
+
+    async Task HandleDelete(Contact contact)
+    {
+        var parameters = new DialogParameters<ContactDialog>();
+        parameters.Add("Contact", contact);
+        parameters.Add("Mode", "del");
+
+        var dialog = await DialogService.ShowAsync<ContactDialog>("Delete Contact", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            contacts!.Remove(contact);
+        }
     }
 }

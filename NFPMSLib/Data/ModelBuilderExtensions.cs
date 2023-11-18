@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NFPMSLib.Models;
@@ -85,6 +81,14 @@ namespace NFPMSLib.Data
                     Description = "Donations for the purpose of upgrading the gym",
                     Created = DateTime.Now,
                     CreatedBy = "System Generated"
+                },
+                new TransactionType
+                {
+                    TransactionTypeId = 4,
+                    Name = "Clothings for homeless",
+                    Description = "Donations for homeless people",
+                    Created = DateTime.Now,
+                    CreatedBy = "System Generated"
                 }
             };
 
@@ -116,6 +120,27 @@ namespace NFPMSLib.Data
                     Name = "PayPal",
                     Created = DateTime.Now,
                     CreatedBy = "System Generated"
+                },
+                new PaymentMethod
+                {
+                    PaymentMethodId = 4,
+                    Name = "Cash",
+                    Created = DateTime.Now,
+                    CreatedBy = "System Generated"
+                },
+                new PaymentMethod
+                {
+                    PaymentMethodId = 5,
+                    Name = "Apple Pay",
+                    Created = DateTime.Now,
+                    CreatedBy = "System Generated"
+                },
+                new PaymentMethod
+                {
+                    PaymentMethodId = 6,
+                    Name = "E-Transfer",
+                    Created = DateTime.Now,
+                    CreatedBy = "System Generated"
                 }
             };
 
@@ -134,7 +159,7 @@ namespace NFPMSLib.Data
                     PaymentMethodId = 1,
                     AccountNo = 1,
                     Date = DateTime.Now,
-                    Amount = 100.00m,
+                    Amount = 10000.00m,
                     Notes = "This is a test donation",
                     Created = DateTime.Now,
                     CreatedBy = "System Generated"
@@ -146,7 +171,7 @@ namespace NFPMSLib.Data
                     PaymentMethodId = 2,
                     AccountNo = 2,
                     Date = DateTime.Now,
-                    Amount = 500.50m,
+                    Amount = 50000.00m,
                     Notes = "This is a test donation",
                     Created = DateTime.Now,
                     CreatedBy = "System Generated"
@@ -158,7 +183,7 @@ namespace NFPMSLib.Data
                     PaymentMethodId = 3,
                     AccountNo = 3,
                     Date = DateTime.Now,
-                    Amount = 10.25m,
+                    Amount = 83000.00m,
                     Notes = "This is a test donation",
                     Created = DateTime.Now,
                     CreatedBy = "System Generated"

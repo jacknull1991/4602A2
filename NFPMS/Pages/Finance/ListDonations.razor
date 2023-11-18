@@ -1,59 +1,88 @@
 @page "/donations"
 @inject FinanceService financeService
+@inject IDialogService DialogService
 @attribute [Authorize(Roles = "Admin, Finance")]
 
 <PageTitle>Donations</PageTitle>
-
-<h1>Donations List</h1>
-@* <p>@context.User.IsInRole("Finance")</p> *@
-@if (donations == null)
-{
-<p><em>Loading...</em></p>
-}
-else
-{
-<a href="/donations/add" class="btn btn-primary"><span class="oi oi-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add Donation</a>
-
-<table class="table table-hover table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Donor</th>
-            <th>Category</th>
-            <th>Payment Method</th>
-            <th>Notes</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var donation in donations)
-        {
-            <tr>
-                <td>@donation.Date?.ToString("dddd, dd MMMM yyyy")</td>
-                <td>@string.Format("{0:C}", donation.Amount)</td>
-                <td>@donation.Contact!.FirstName @donation.Contact!.LastName</td>
-                <td>@donation.TransactionType!.Name</td>
-                <td>@donation.PaymentMethod!.Name</td>
-                <td>@donation.Notes</td>
-                <td>
-                    <a class="btn btn-success btn-sm py-0" href="/donations/edit/@donation.TransactionId">
-                        <span class="oi oi-pencil" aria-hidden="true"></span>
-                    </a>
-                    <a class="btn btn-danger btn-sm py-0" href="/donations/delete/@donation.TransactionId">
-                        <span class="oi oi-trash" aria-hidden="true"></span>
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-}
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Color="Color.Inherit" Typo="Typo.h5">Donations</MudText>
+    <MudDataGrid T="Donation" Items="@donations" Dense=true Hover=true Bordered=true Striped=true 
+        ColumnResizeMode="@ResizeMode.Column">
+        <ToolBarContent>
+            <MudButton OnClick="@AddItem" Color="@Color.Success" Class="add-item-btn mr-5">Add Donation</MudButton>
+            <MudSpacer />
+            @* <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField> *@
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.TransactionId" Title="Transaction ID" />
+            <PropertyColumn Property="x => x.Contact!.FirstName + ' ' + x.Contact!.LastName" Title="Donor" />
+            <PropertyColumn Property="x => x.PaymentMethod!.Name" Title="Donated Via" />
+            <PropertyColumn Property="x => x.TransactionType!.Name" Title="Category" />
+            <PropertyColumn Property="x => x.Amount" Title="Amount" Format="c"/>
+            <PropertyColumn Property="x => x.Date" Title="Date" Format="dddd, dd MMMM yyyy"/>
+            <PropertyColumn Property="x => x.Notes" Title="Notes" />  
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
 
 @code {
-    List<Donation>? donations;
-    protected override async Task OnInitializedAsync()
+    private List<Donation>? donations = new List<Donation>();
+    @* private string? _searchString = ""; *@
+
+    protected async override Task OnInitializedAsync()
     {
         donations = await financeService.GetDonationsAsync();
+    }
+
+    async Task AddItem() 
+    {
+        var parameters = new DialogParameters<DonationDialog>();
+        parameters.Add("Donation", new Donation());
+        parameters.Add("Mode", "add");
+
+        var dialog = await DialogService.ShowAsync<DonationDialog>("Add Donation", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            donations!.Add((Donation) result.Data);
+        }
+    }
+
+    async Task HandleEdit(Donation donation)
+    {
+        var parameters = new DialogParameters<DonationDialog>();
+        var copy = new Donation(donation);
+        parameters.Add("Donation", copy);
+        parameters.Add("Mode", "edit");
+
+        var dialog = await DialogService.ShowAsync<DonationDialog>("Edit Donation", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            donation = copy;
+        }
+    }
+
+    async Task HandleDelete(Donation donation)
+    {
+        var parameters = new DialogParameters<DonationDialog>();
+        parameters.Add("Donation", donation);
+        parameters.Add("Mode", "del");
+
+        var dialog = await DialogService.ShowAsync<DonationDialog>("Delete Donation", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            donations!.Remove(donation);
+        }
     }
 }

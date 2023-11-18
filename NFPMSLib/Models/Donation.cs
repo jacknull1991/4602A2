@@ -47,4 +47,22 @@ public class Donation
     public string? ModifiedBy { get; set; }
 
     #endregion
+
+    public Donation() {}
+    public Donation(Donation donation) {
+        TransactionId = donation.TransactionId;
+        TransactionType = donation.TransactionType;
+        TransactionTypeId = donation.TransactionTypeId;
+        PaymentMethod = donation.PaymentMethod;
+        PaymentMethodId = donation.PaymentMethodId;
+        Contact = donation.Contact;
+        AccountNo = donation.AccountNo;
+        Date = donation.Date;
+        Amount = donation.Amount;
+        Notes = donation.Notes;
+        Created = donation.Created;
+        Modified = donation.Modified;
+        CreatedBy = donation.CreatedBy;
+        ModifiedBy = donation.ModifiedBy;
+    }
 }

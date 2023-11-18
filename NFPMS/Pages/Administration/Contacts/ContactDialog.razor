@@ -1,0 +1,75 @@
+@inject AdminService adminService
+
+<EditForm Model="Contact" OnValidSubmit="Submit">
+<MudDialog Style="width: 560px;">
+    <TitleContent>
+        @if (Mode == "edit") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1"/>Edit contact info </MudText>
+        } else if (Mode == "del") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>Delete this contact?</MudText>
+        } else {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>New contact</MudText>
+        }
+        @if (errorMessage != null && errorMessage != "") { 
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-3" Elevation="0" Icon="@Icons.Material.Filled.ErrorOutline">
+                @errorMessage
+            </MudAlert>
+        }
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="Contact.FirstName" Label="First Name" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.FirstName)" />
+        <MudTextField @bind-Value="Contact.LastName" Label="Last Name" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.LastName)" />
+        <MudTextField @bind-Value="Contact.Email" Label="Email" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.Email)" />
+        <MudTextField @bind-Value="Contact.Street" Label="Street" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.Street)" />
+        <MudTextField @bind-Value="Contact.City" Label="City" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.City)" />
+        <MudTextField @bind-Value="Contact.Country" Label="Country" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.Country)" />
+        <MudTextField @bind-Value="Contact.PostalCode" Label="Postal Code" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => Contact.PostalCode)" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@if (Mode != "del") {
+<DataAnnotationsValidator />
+}
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public Contact Contact { get; set; } = new Contact();
+    [Parameter] public string? Mode { get; set; }
+
+    private string? errorMessage = "";
+
+    private void Cancel()
+    {
+        MudDialog!.Cancel();
+    }
+
+    private async Task Submit()
+    {
+        try {
+            if (Mode == "edit") {
+                await adminService.UpdateContactAsync(Contact);
+            } else if (Mode == "del") {
+                await adminService.DeleteContactAsync(Contact.AccountNo);
+            } else if (Mode == "add"){
+                await adminService.AddContactAsync(Contact);
+            } else {
+                throw new Exception("Invalid action");
+            }
+            MudDialog!.Close(DialogResult.Ok(Contact));
+        } catch (Exception ex) {
+            errorMessage = ex.Message;
+        }
+    }
+}

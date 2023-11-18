@@ -1,108 +1,95 @@
 @page "/categories"
 @inject AdminService adminService
+@inject IDialogService DialogService
 @attribute [Authorize(Roles = "Admin")]
 
-<PageTitle>Setting - Transaction Types</PageTitle>
-
-<h1>Setting - Transaction Types (Categories)</h1>
-@if (errorMessage != null && errorMessage != "")
-{
-<div class="alert alert-danger col-md-8" role="alert">
-    @errorMessage
-</div>    
-}
-@if (transactionTypes == null)
-{
-<p><em>Loading...</em></p>
-}
-else
-{
-<div class="col-md-8">
-    <button class="btn btn-primary" @onclick="AddRow"><span class="oi oi-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add Category</button>
-    <table class="table table-hover table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Category Name</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var t in transactionTypes)
-            {
-                <tr>
-                    <td>@t.Name</td>
-                    <td>@t.Description</td>
-                    <td>
-                        <a class="btn btn-success btn-sm py-0" href="/categories/edit/@t.TransactionTypeId"><span class="oi oi-pencil" aria-hidden="true"></span></a>
-                        <button class="btn btn-danger btn-sm py-0" @onclick="()=>HandleDelete(t.TransactionTypeId)"><span class="oi oi-trash" aria-hidden="true"></span></button>
-                    </td>
-                </tr>
-            }
-            @if (newTransactionType != null) {
-                <tr>
-                    <td>
-                        <input type="text" class="form-control" @bind="newTransactionType.Name" placeholder="Enter category name..." required/>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" @bind="newTransactionType.Description" placeholder="Enter description..." required/>
-                    </td>
-                    <td>
-                        <button class="btn btn-success btn-sm py-0" @onclick="HandleAdd"><span class="oi oi-circle-check" aria-hidden="true"></span></button>
-                        <button class="btn btn-danger btn-sm py-0" @onclick="RemoveRow"><span class="oi oi-circle-x" aria-hidden="true"></span></button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-}
+<PageTitle>Settings - Transaction Types</PageTitle>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Color="Color.Inherit" Typo="Typo.h5">Registered Transaction Types</MudText>
+    <MudDataGrid T="TransactionType" Items="@transactionTypes" Dense=true Hover=true Bordered=true Striped=true 
+        QuickFilter="@SearchFilter" ColumnResizeMode="@ResizeMode.Column">
+        <ToolBarContent>
+            <MudButton OnClick="@AddItem" Color="@Color.Success" Class="add-item-btn mr-5">Add Transaction Type</MudButton>
+            <MudSwitch @bind-Checked="@_showAll" Color="Color.Info" Label="Show Timestamps"/>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Name" />
+            <PropertyColumn Property="x => x.Description" Title="Description" />
+            <PropertyColumn Property="x => x.Created" Title="Created" Hidden="@(!_showAll)"/>
+            <PropertyColumn Property="x => x.CreatedBy" Title="Created By" Hidden="@(!_showAll)"/>
+            <PropertyColumn Property="x => x.Modified" Title="Last Modified" Hidden="@(!_showAll)"/>
+            <PropertyColumn Property="x => x.ModifiedBy" Title="Last Modified By" Hidden="@(!_showAll)"/>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
 
 @code {
-    List<TransactionType>? transactionTypes;
-
-    private TransactionType? newTransactionType = null;
-
-    private string? errorMessage = "";
+    private List<TransactionType> transactionTypes = new List<TransactionType>();
+    private string? _searchString = "";
+    private bool _showAll = false;
 
     protected override async Task OnInitializedAsync()
     {
         transactionTypes = await adminService.GetTransactionTypesAsync();
     }
 
-    private void AddRow() 
+    private Func<TransactionType, bool> SearchFilter => p =>
     {
-        if (newTransactionType == null)
-            newTransactionType = new TransactionType();
-    }
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
 
-    private void RemoveRow()
-    {
-        newTransactionType = null;
-    }
+        return p.Name!.Contains(_searchString, StringComparison.OrdinalIgnoreCase);
+    };
 
-    private async Task HandleAdd() {
-        if (newTransactionType != null && newTransactionType.Name != null && newTransactionType.Description != null) {
-            try {
-                await adminService.AddTransactionTypeAsync(newTransactionType);
-                transactionTypes = await adminService.GetTransactionTypesAsync();
-                newTransactionType = null;
-                errorMessage = "";
-            } catch (Exception e) {
-                errorMessage = e.Message;
-            }
-        } else {
-            errorMessage = "Please fill in all fields.";
+    async Task HandleEdit(TransactionType transactionType) {
+        var parameters = new DialogParameters<TransactionTypeDialog>();
+        var copy = new TransactionType(transactionType);
+        parameters.Add("TransactionType", copy);
+        parameters.Add("Mode", "edit");
+
+        var dialog = await DialogService.ShowAsync<TransactionTypeDialog>("Edit Transaction Type", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            transactionType = copy;
         }
     }
 
-    private async Task HandleDelete(int id)
+    async Task HandleDelete(TransactionType transactionType) {
+        var parameters = new DialogParameters<TransactionTypeDialog>();
+        parameters.Add("TransactionType", transactionType);
+        parameters.Add("Mode", "del");
+
+        var dialog = await DialogService.ShowAsync<TransactionTypeDialog>("Delete Transaction Type", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            transactionTypes.Remove(transactionType);
+        }
+    }
+
+    async Task AddItem() 
     {
-        try {
-            await adminService.DeleteTransactionTypeAsync(id);
-            transactionTypes = await adminService.GetTransactionTypesAsync();
-        } catch (Exception e) {
-            errorMessage = e.Message;
+        var parameters = new DialogParameters<TransactionTypeDialog>();
+        parameters.Add("TransactionType", new TransactionType());
+        parameters.Add("Mode", "add");
+
+        var dialog = await DialogService.ShowAsync<TransactionTypeDialog>("Add Transaction Type", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            transactionTypes.Add((TransactionType) result.Data);
         }
     }
 }

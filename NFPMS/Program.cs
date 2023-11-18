@@ -1,3 +1,5 @@
+using MudBlazor.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +19,9 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<FinanceService>();
 builder.Services.AddHttpContextAccessor();
+
+// MudBlazor
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

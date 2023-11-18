@@ -28,4 +28,15 @@ public class TransactionType
     public string? ModifiedBy { get; set; }
 
     #endregion
+
+    public TransactionType() {}
+    public TransactionType(TransactionType transactionType) {
+        TransactionTypeId = transactionType.TransactionTypeId;
+        Name = transactionType.Name;
+        Description = transactionType.Description;
+        Created = transactionType.Created;
+        Modified = transactionType.Modified;
+        CreatedBy = transactionType.CreatedBy;
+        ModifiedBy = transactionType.ModifiedBy;
+    }
 }

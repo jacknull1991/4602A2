@@ -1,0 +1,63 @@
+@inject AdminService adminService
+
+<EditForm Model="paymentMethod" OnValidSubmit="Submit">
+<MudDialog Style="width: 560px;">
+    <TitleContent>
+        @if (Mode == "edit") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1"/>Edit payment method</MudText>
+        } else if (Mode == "del") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>Delete this payment method?</MudText>
+        } else {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>New payment method</MudText>
+        }
+        @if (errorMessage != null && errorMessage != "") { 
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-3" Elevation="0" Icon="@Icons.Material.Filled.ErrorOutline">
+                @errorMessage
+            </MudAlert>
+        }
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="paymentMethod.Name" Label="Name" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => paymentMethod.Name)" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@if (Mode != "del") {
+<DataAnnotationsValidator />
+}
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public PaymentMethod paymentMethod { get; set; } = new PaymentMethod();
+    [Parameter] public string? Mode { get; set; }
+
+    private string? errorMessage = "";
+
+    private void Cancel()
+    {
+        MudDialog!.Cancel();
+    }
+
+    private async Task Submit()
+    {
+        try {
+            if (Mode == "edit") {
+                await adminService.UpdatePaymentMethodAsync(paymentMethod);
+            } else if (Mode == "del") {
+                await adminService.DeletePaymentMethodAsync(paymentMethod.PaymentMethodId);
+            } else if (Mode == "add"){
+                await adminService.AddPaymentMethodAsync(paymentMethod);
+            } else {
+                throw new Exception("Invalid action");
+            }
+            MudDialog!.Close(DialogResult.Ok(paymentMethod));
+        } catch (Exception ex) {
+            errorMessage = ex.Message;
+        }
+    }
+}

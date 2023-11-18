@@ -1,0 +1,73 @@
+@page "/reports/yearlyreport"
+@inject AdminService adminService
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudContainer MaxWidth="MaxWidth.Small" >
+            <MudSelect T="int" Value="@Year" Label="Select year" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
+                ValueChanged="HandleYearChange">
+                <MudSelectItem Value="@(DateTime.Now.Year-5)" />
+                <MudSelectItem Value="@(DateTime.Now.Year-4)" />
+                <MudSelectItem Value="@(DateTime.Now.Year-3)" />
+                <MudSelectItem Value="@(DateTime.Now.Year-2)" />
+                <MudSelectItem Value="@(DateTime.Now.Year-1)" />
+                <MudSelectItem Value="@DateTime.Now.Year"/>
+            </MudSelect>
+            <br />
+            <MudLink Href="/reports/yearlyreport-list" >VIEW RAW NUMBERS</MudLink>
+        </MudContainer>
+    </MudItem>
+    <MudItem xs="12">
+        <MudChart ChartType="ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxisLabels" ChartOptions="@_options" Width="100%" Height="450px">
+        </MudChart>
+    </MudItem>
+    <MudItem xs="6">
+        <MudChart ChartType="ChartType.Pie" InputData="@PieData" InputLabels="@PieLabels" Width="300px" Height="300px">
+        </MudChart>
+    </MudItem>
+    <MudItem xs="6">
+        <MudChart ChartType="ChartType.Pie" InputData="@PieData2" InputLabels="@PieLabels2" Width="300px" Height="300px">
+        </MudChart>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private int Year = DateTime.Now.Year;
+    private List<ChartSeries> Series = new List<ChartSeries>();
+    private readonly ChartOptions _options = new();
+    private string[]? XAxisLabels;
+    private string[]? PieLabels;
+    private double[]? PieData;
+    private string[]? PieLabels2;
+    private double[]? PieData2;
+
+    protected override async Task OnInitializedAsync() {
+        var report = await adminService.GetYearlyReportAsync(Year);
+        PopulateChart(report);
+    }
+
+    async Task HandleYearChange(int value) {
+        Year = value;
+        var report = await adminService.GetYearlyReportAsync(value);
+        PopulateChart(report);
+    }
+
+    void PopulateChart(YearlyReport report) {
+        // line chart
+        XAxisLabels =  Array.ConvertAll(report.DonationsByMonth!.Keys.ToArray<string>(), x => x.Substring(0, 3));
+        var data = Array.ConvertAll(report.DonationsByMonth!.Values.ToArray(), x => (double)x);
+        var list = new ChartSeries() { Name = "Monthly Donations", Data = data };
+        Series = new List<ChartSeries>();
+        Series.Add(list);
+
+        _options.YAxisFormat = "c";
+        _options.YAxisTicks = (int) (report.DonationsByMonth!.Values.Max() / 5);
+
+        // pie chart
+        PieLabels = report.DonationsByPaymentType!.Keys.ToArray();
+        PieData = Array.ConvertAll(report.DonationsByPaymentType!.Values.ToArray(), x => (double)x);
+
+        PieLabels2 = report.DonationsByCategory!.Keys.ToArray();
+        PieData2 = Array.ConvertAll(report.DonationsByCategory!.Values.ToArray(), x => (double)x);
+    }
+}

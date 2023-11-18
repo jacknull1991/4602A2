@@ -1,0 +1,65 @@
+@inject AdminService adminService
+
+<EditForm Model="TransactionType" OnValidSubmit="Submit">
+<MudDialog Style="width: 560px;">
+    <TitleContent>
+        @if (Mode == "edit") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1"/>Edit transaction type </MudText>
+        } else if (Mode == "del") {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>Delete this transaction type?</MudText>
+        } else {
+            <MudText Typo="Typo.h6"><MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>New transaction type</MudText>
+        }
+        @if (errorMessage != null && errorMessage != "") { 
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-3" Elevation="0" Icon="@Icons.Material.Filled.ErrorOutline">
+                @errorMessage
+            </MudAlert>
+        }
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="TransactionType.Name" Label="Name" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => TransactionType.Name)" />
+        <MudTextField @bind-Value="TransactionType.Description" Label="Name" ReadOnly="@(Mode=="del")" Required=true/>
+        <ValidationMessage For="@(() => TransactionType.Description)" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@if (Mode != "del") {
+<DataAnnotationsValidator />
+}
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public TransactionType TransactionType { get; set; } = new TransactionType();
+    [Parameter] public string? Mode { get; set; }
+
+    private string? errorMessage = "";
+
+    private void Cancel()
+    {
+        MudDialog!.Cancel();
+    }
+
+    private async Task Submit()
+    {
+        try {
+            if (Mode == "edit") {
+                await adminService.UpdateTransactionTypeAsync(TransactionType);
+            } else if (Mode == "del") {
+                await adminService.DeleteTransactionTypeAsync(TransactionType.TransactionTypeId);
+            } else if (Mode == "add"){
+                await adminService.AddTransactionTypeAsync(TransactionType);
+            } else {
+                throw new Exception("Invalid action");
+            }
+            MudDialog!.Close(DialogResult.Ok(TransactionType));
+        } catch (Exception ex) {
+            errorMessage = ex.Message;
+        }
+    }
+}

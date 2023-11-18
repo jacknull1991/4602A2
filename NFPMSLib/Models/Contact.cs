@@ -49,4 +49,20 @@ public class Contact
     public string? ModifiedBy { get; set; }
 
     #endregion
+
+    public Contact() {}
+    public Contact(Contact contact) {
+        AccountNo = contact.AccountNo;
+        FirstName = contact.FirstName;
+        LastName = contact.LastName;
+        Email = contact.Email;
+        Street = contact.Street;
+        City = contact.City;
+        PostalCode = contact.PostalCode;
+        Country = contact.Country;
+        Created = contact.Created;
+        Modified = contact.Modified;
+        CreatedBy = contact.CreatedBy;
+        ModifiedBy = contact.ModifiedBy;
+    }
 }

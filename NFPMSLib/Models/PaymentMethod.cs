@@ -25,4 +25,14 @@ public class PaymentMethod
     public string? ModifiedBy { get; set; }
 
     #endregion
+
+    public PaymentMethod() {}
+    public PaymentMethod(PaymentMethod paymentMethod) {
+        PaymentMethodId = paymentMethod.PaymentMethodId;
+        Name = paymentMethod.Name;
+        Created = paymentMethod.Created;
+        Modified = paymentMethod.Modified;
+        CreatedBy = paymentMethod.CreatedBy;
+        ModifiedBy = paymentMethod.ModifiedBy;
+    }
 }
