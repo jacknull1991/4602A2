@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NFPMSLib.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedDBSchema : Migration
+    public partial class SeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -261,8 +261,8 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "95bc2563-6dad-42bc-a1d3-1aef37e56fa2", null, "Admin", "ADMIN" },
-                    { "9ab2f5a3-7a14-441d-946d-92e8ee289f2b", null, "Finance", "FINANCE" }
+                    { "04e352e7-6be9-46f2-84b1-82cfff9e1762", null, "Admin", "ADMIN" },
+                    { "9f72f812-5720-4b20-a6f0-8d49a7df48ab", null, "Finance", "FINANCE" }
                 });
 
             migrationBuilder.InsertData(
@@ -270,8 +270,8 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "538a350c-46d1-4cf8-85ef-3629c3935025", 0, "b1ad37f9-da26-4029-ad36-d4037756938f", "f@f.f", true, false, null, "F@F.F", "F@F.F", "AQAAAAIAAYagAAAAEHqN5PstTHDicWTDqeLYTL2wYazpxkafF627FOoVnu/5QAShRNDL++p94vc5jmv3tA==", null, false, "72b95a34-4283-4028-8063-13433502635b", false, "f@f.f" },
-                    { "999bbc88-78c8-4f66-9cf9-b193a1565d3f", 0, "4b3a5ea9-c3a7-4caf-b602-c311374cc53d", "a@a.a", true, false, null, "A@A.A", "A@A.A", "AQAAAAIAAYagAAAAEH8VOibXDdrzm8T8H43Sd1i2YyerYXlnM+fLsfHk83DcsVYWy6MiAxNAmae83exisg==", null, false, "e37be858-f51c-4490-8ee8-062183d142ea", false, "a@a.a" }
+                    { "0840c51f-ad63-4480-aa9c-b3665423530f", 0, "6765bd05-0c0c-4cc9-bde4-2ad66b239c24", "f@f.f", true, false, null, "F@F.F", "F@F.F", "AQAAAAIAAYagAAAAECf5wI7oZz/+pcKVwY2OZZ6NlqfxCpEh63o0gaXnVdGfQHC8KSJZmozl2go8n6QfEA==", null, false, "331b7215-9429-4795-91fa-e841ea2fc8d9", false, "f@f.f" },
+                    { "ce4386ef-1f5e-4cc1-b2f0-ca94e5fa2d3e", 0, "d855daac-3c06-4d80-9a0a-adabddb5be35", "a@a.a", true, false, null, "A@A.A", "A@A.A", "AQAAAAIAAYagAAAAEKuGEgPTEnlKQBPlJXwkNEyiZx/fykiNSucqbC9ms49+iZlBjhMZppjp5AGAwv3pTQ==", null, false, "e9bd2d0f-ae17-4748-9096-e3d43e312abb", false, "a@a.a" }
                 });
 
             migrationBuilder.InsertData(
@@ -279,9 +279,18 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "AccountNo", "City", "Country", "Created", "CreatedBy", "Email", "FirstName", "LastName", "Modified", "ModifiedBy", "PostalCode", "Street" },
                 values: new object[,]
                 {
-                    { 1, "Foxville", "Canada", new DateTime(2023, 11, 17, 23, 32, 6, 124, DateTimeKind.Local).AddTicks(9930), "System Generated", "sam@fox.com", "Sam", "Fox", null, null, "F0X 1F0", "123 Fox Avenue" },
-                    { 2, "Riverdale", "Canada", new DateTime(2023, 11, 17, 23, 32, 6, 124, DateTimeKind.Local).AddTicks(9972), "System Generated", "ann@day.com", "Ann", "Day", null, null, "R1V 3R4", "2123 River Blvd" },
-                    { 3, "Winnipeg", "Canada", new DateTime(2023, 11, 17, 23, 32, 6, 124, DateTimeKind.Local).AddTicks(9975), "System Generated", "mike@smith.com", "Michael", "Smith", null, null, "R3R 3R3", "8080 Main Street" }
+                    { 1, "California", "USA", null, null, "tm@gmail.com", "Tom", "Max", null, null, "12345", "1000 Main St" },
+                    { 2, "Portland", "USA", null, null, "af@gmail.com", "Ann", "Fay", null, null, "10087", "2000 Main St" },
+                    { 3, "Tacoma", "USA", null, null, "js@gmail.com", "Joe", "Sun", null, null, "28762", "3000 Main St" },
+                    { 4, "Seattle", "USA", null, null, "sf@gmail.com", "Sue", "Fox", null, null, "38762", "4000 Main St" },
+                    { 5, "New York", "USA", null, null, "br@gmail.com", "Ben", "Ray", null, null, "87692", "5000 Main St" },
+                    { 6, "Vancouver", "Canada", null, null, "zc@outlook.com", "Zoe", "Cox", null, null, "A1B 2C3", "2011 Broadway St" },
+                    { 7, "Vancouver", "Canada", null, null, "sr@outlook.com", "Sam", "Ray", null, null, "A3B 2D3", "3011 Broadway St" },
+                    { 8, "Richmond", "Canada", null, null, "da@outlook.com", "Dan", "Ash", null, null, "F9K 6E6", "4011 Kingsway" },
+                    { 9, "Richmond", "Canada", null, null, "pl@outlook.com", "Pat", "Lee", null, null, "P4L 5K1", "5011 Kingsway" },
+                    { 10, "Surrey", "Canada", null, null, "kd@bcit.com", "Kim", "Day", null, null, "K6D 6B0", "6011 Oakbridge Ave" },
+                    { 11, "Surrey", "Canada", null, null, "tr@bcit.com", "Tim", "Rex", null, null, "A6B 4B4", "7011 Valley Rd" },
+                    { 12, "Whiterock", "Canada", null, null, "rr@bcit.com", "Rob", "Ram", null, null, "M1H 9T9", "8011 Creek St" }
                 });
 
             migrationBuilder.InsertData(
@@ -289,12 +298,11 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "PaymentMethodId", "Created", "CreatedBy", "Modified", "ModifiedBy", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(498), "System Generated", null, null, "Direct Deposit" },
-                    { 2, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(505), "System Generated", null, null, "Cheque" },
-                    { 3, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(507), "System Generated", null, null, "PayPal" },
-                    { 4, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(510), "System Generated", null, null, "Cash" },
-                    { 5, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(512), "System Generated", null, null, "Apple Pay" },
-                    { 6, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(523), "System Generated", null, null, "E-Transfer" }
+                    { 1, null, null, null, null, "PayPal" },
+                    { 2, null, null, null, null, "Cheque" },
+                    { 3, null, null, null, null, "Money Order" },
+                    { 4, null, null, null, null, "Wire Transfer" },
+                    { 5, null, null, null, null, "Direct Deposit" }
                 });
 
             migrationBuilder.InsertData(
@@ -302,10 +310,11 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "TransactionTypeId", "Created", "CreatedBy", "Description", "Modified", "ModifiedBy", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(311), "System Generated", "Donations made without a specific purpose", null, null, "General Donation" },
-                    { 2, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(317), "System Generated", "Donations made for homeless people", null, null, "Food for homeless" },
-                    { 3, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(319), "System Generated", "Donations for the purpose of upgrading the gym", null, null, "Repair of Gym" },
-                    { 4, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(321), "System Generated", "Donations for homeless people", null, null, "Clothings for homeless" }
+                    { 1, null, null, "Donations made without a specific purpose", null, null, "General Donation" },
+                    { 2, null, null, "Donations made for food", null, null, "Food" },
+                    { 3, null, null, "Donations made for medical expenses", null, null, "Medical" },
+                    { 4, null, null, "Donations made for education", null, null, "Education" },
+                    { 5, null, null, "Donations made for children", null, null, "Donation for Children" }
                 });
 
             migrationBuilder.InsertData(
@@ -313,8 +322,8 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { "9ab2f5a3-7a14-441d-946d-92e8ee289f2b", "538a350c-46d1-4cf8-85ef-3629c3935025" },
-                    { "95bc2563-6dad-42bc-a1d3-1aef37e56fa2", "999bbc88-78c8-4f66-9cf9-b193a1565d3f" }
+                    { "9f72f812-5720-4b20-a6f0-8d49a7df48ab", "0840c51f-ad63-4480-aa9c-b3665423530f" },
+                    { "04e352e7-6be9-46f2-84b1-82cfff9e1762", "ce4386ef-1f5e-4cc1-b2f0-ca94e5fa2d3e" }
                 });
 
             migrationBuilder.InsertData(
@@ -322,9 +331,9 @@ namespace NFPMSLib.Data.Migrations
                 columns: new[] { "TransactionId", "AccountNo", "Amount", "Created", "CreatedBy", "Date", "Modified", "ModifiedBy", "Notes", "PaymentMethodId", "TransactionTypeId" },
                 values: new object[,]
                 {
-                    { 1, 1, 10000.00m, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(655), "System Generated", new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(650), null, null, "This is a test donation", 1, 1 },
-                    { 2, 2, 50000.00m, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(662), "System Generated", new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(660), null, null, "This is a test donation", 2, 2 },
-                    { 3, 3, 83000.00m, new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(666), "System Generated", new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(665), null, null, "This is a test donation", 3, 3 }
+                    { 1, 1, 10000.00m, new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9621), "System Generated", new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9568), null, null, "This is a test donation", 1, 1 },
+                    { 2, 2, 50000.00m, new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9633), "System Generated", new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9630), null, null, "This is a test donation", 2, 2 },
+                    { 3, 3, 83000.00m, new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9641), "System Generated", new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9638), null, null, "This is a test donation", 3, 3 }
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,156 +1,163 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NFPMSLib.Models;
 
-namespace NFPMSLib.Data
+namespace NFPMSLib.Data;
+
+public static class ModelBuilderExtensions
 {
-    public static class ModelBuilderExtensions
+    public static void SeedContacts(this ModelBuilder modelBuilder)
     {
-        public static void SeedContacts(this ModelBuilder modelBuilder)
-        {
-            List<Contact> contacts =  new List<Contact>()
-            {
-                new Contact
-                {
-                    AccountNo = 1,
-                    FirstName = "Sam",
-                    LastName = "Fox",
-                    Email = "sam@fox.com",
-                    Street = "123 Fox Avenue",
-                    City = "Foxville",
-                    PostalCode = "F0X 1F0",
-                    Country = "Canada",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new Contact
-                {
-                    AccountNo = 2,
-                    FirstName = "Ann",
-                    LastName = "Day",
-                    Email = "ann@day.com",
-                    Street = "2123 River Blvd",
-                    City = "Riverdale",
-                    PostalCode = "R1V 3R4",
-                    Country = "Canada",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new Contact
-                {
-                    AccountNo = 3,
-                    FirstName = "Michael",
-                    LastName = "Smith",
-                    Email = "mike@smith.com",
-                    Street = "8080 Main Street",
-                    City = "Winnipeg",
-                    PostalCode = "R3R 3R3",
-                    Country = "Canada",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                }
-            };
-            modelBuilder.Entity<Contact>().ToTable("Contacts");
-            modelBuilder.Entity<Contact>().HasData(contacts);
-        }
+        // List<Contact> contacts = new List<Contact>()
+        //     {
+        //         new Contact
+        //         {
+        //             AccountNo = 1,
+        //             FirstName = "Sam",
+        //             LastName = "Fox",
+        //             Email = "sam@fox.com",
+        //             Street = "123 Fox Avenue",
+        //             City = "Foxville",
+        //             PostalCode = "F0X 1F0",
+        //             Country = "Canada",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new Contact
+        //         {
+        //             AccountNo = 2,
+        //             FirstName = "Ann",
+        //             LastName = "Day",
+        //             Email = "ann@day.com",
+        //             Street = "2123 River Blvd",
+        //             City = "Riverdale",
+        //             PostalCode = "R1V 3R4",
+        //             Country = "Canada",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new Contact
+        //         {
+        //             AccountNo = 3,
+        //             FirstName = "Michael",
+        //             LastName = "Smith",
+        //             Email = "mike@smith.com",
+        //             Street = "8080 Main Street",
+        //             City = "Winnipeg",
+        //             PostalCode = "R3R 3R3",
+        //             Country = "Canada",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         }
+        //     };
 
-        public static void SeedTransactionTypes(this ModelBuilder modelBuilder)
-        {
-            List<TransactionType> transactionTypes = new List<TransactionType>()
-            {
-                new TransactionType
-                {
-                    TransactionTypeId = 1,
-                    Name = "General Donation",
-                    Description = "Donations made without a specific purpose",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new TransactionType
-                {
-                    TransactionTypeId = 2,
-                    Name = "Food for homeless",
-                    Description = "Donations made for homeless people",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new TransactionType
-                {
-                    TransactionTypeId = 3,
-                    Name = "Repair of Gym",
-                    Description = "Donations for the purpose of upgrading the gym",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new TransactionType
-                {
-                    TransactionTypeId = 4,
-                    Name = "Clothings for homeless",
-                    Description = "Donations for homeless people",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                }
-            };
+        modelBuilder.Entity<Contact>().ToTable("Contacts");
+        // modelBuilder.Entity<Contact>().HasData(contacts);
+        modelBuilder.Entity<Contact>().HasData(GetCsvData<Contact>("contacts.csv"));
+    }
 
-            modelBuilder.Entity<TransactionType>().ToTable("TransactionTypes");
-            modelBuilder.Entity<TransactionType>().HasData(transactionTypes);
-        }
+    public static void SeedTransactionTypes(this ModelBuilder modelBuilder)
+    {
+        // List<TransactionType> transactionTypes = new List<TransactionType>()
+        //     {
+        //         new TransactionType
+        //         {
+        //             TransactionTypeId = 1,
+        //             Name = "General Donation",
+        //             Description = "Donations made without a specific purpose",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new TransactionType
+        //         {
+        //             TransactionTypeId = 2,
+        //             Name = "Food for homeless",
+        //             Description = "Donations made for homeless people",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new TransactionType
+        //         {
+        //             TransactionTypeId = 3,
+        //             Name = "Repair of Gym",
+        //             Description = "Donations for the purpose of upgrading the gym",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new TransactionType
+        //         {
+        //             TransactionTypeId = 4,
+        //             Name = "Clothings for homeless",
+        //             Description = "Donations for homeless people",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         }
+        //     };
 
-        public static void SeedPaymentMethods(this ModelBuilder modelBuilder)
-        {
-            List<PaymentMethod> paymentMethods = new List<PaymentMethod>() 
-            {
-                new PaymentMethod
-                {
-                    PaymentMethodId = 1,
-                    Name = "Direct Deposit",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new PaymentMethod
-                {
-                    PaymentMethodId = 2,
-                    Name = "Cheque",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new PaymentMethod
-                {
-                    PaymentMethodId = 3,
-                    Name = "PayPal",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new PaymentMethod
-                {
-                    PaymentMethodId = 4,
-                    Name = "Cash",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new PaymentMethod
-                {
-                    PaymentMethodId = 5,
-                    Name = "Apple Pay",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                },
-                new PaymentMethod
-                {
-                    PaymentMethodId = 6,
-                    Name = "E-Transfer",
-                    Created = DateTime.Now,
-                    CreatedBy = "System Generated"
-                }
-            };
+        modelBuilder.Entity<TransactionType>().ToTable("TransactionTypes");
+        // modelBuilder.Entity<TransactionType>().HasData(transactionTypes);
+        modelBuilder.Entity<TransactionType>().HasData(GetCsvData<TransactionType>("transactiontypes.csv"));
+    }
 
-            modelBuilder.Entity<PaymentMethod>().ToTable("PaymentMethods");
-            modelBuilder.Entity<PaymentMethod>().HasData(paymentMethods);
-        }
+    public static void SeedPaymentMethods(this ModelBuilder modelBuilder)
+    {
+        // List<PaymentMethod> paymentMethods = new List<PaymentMethod>()
+        //     {
+        //         new PaymentMethod
+        //         {
+        //             PaymentMethodId = 1,
+        //             Name = "Direct Deposit",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new PaymentMethod
+        //         {
+        //             PaymentMethodId = 2,
+        //             Name = "Cheque",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new PaymentMethod
+        //         {
+        //             PaymentMethodId = 3,
+        //             Name = "PayPal",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new PaymentMethod
+        //         {
+        //             PaymentMethodId = 4,
+        //             Name = "Cash",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new PaymentMethod
+        //         {
+        //             PaymentMethodId = 5,
+        //             Name = "Apple Pay",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         },
+        //         new PaymentMethod
+        //         {
+        //             PaymentMethodId = 6,
+        //             Name = "E-Transfer",
+        //             Created = DateTime.Now,
+        //             CreatedBy = "System Generated"
+        //         }
+        //     };
 
-        public static void SeedDonations(this ModelBuilder modelBuilder)
-        {
-            List<Donation> donations = new List<Donation>() 
+        modelBuilder.Entity<PaymentMethod>().ToTable("PaymentMethods");
+        // modelBuilder.Entity<PaymentMethod>().HasData(paymentMethods);
+        modelBuilder.Entity<PaymentMethod>().HasData(GetCsvData<PaymentMethod>("payments.csv"));
+    }
+
+    public static void SeedDonations(this ModelBuilder modelBuilder)
+    {
+        List<Donation> donations = new List<Donation>()
             {
                 new Donation
                 {
@@ -190,75 +197,99 @@ namespace NFPMSLib.Data
                 }
             };
 
-            modelBuilder.Entity<Donation>().ToTable("Donations");
-            modelBuilder.Entity<Donation>().HasData(donations);
-        }
+        modelBuilder.Entity<Donation>().ToTable("Donations");
+        modelBuilder.Entity<Donation>().HasData(donations);
+        // modelBuilder.Entity<Donation>().HasData(GetCsvData<Donation>("donations.csv"));
+    }
 
-        public static void SeedUsers(this ModelBuilder modelBuilder)
+    public static void SeedUsers(this ModelBuilder modelBuilder)
+    {
+        var pwd = "P@$$w0rd";
+        var passwordHasher = new PasswordHasher<IdentityUser>();
+
+        var adminUser = new IdentityUser
         {
-            var pwd = "P@$$w0rd";
-            var passwordHasher = new PasswordHasher<IdentityUser>();
+            UserName = "a@a.a",
+            Email = "a@a.a",
+            EmailConfirmed = true,
+        };
+        adminUser.NormalizedUserName = adminUser.UserName.ToUpper();
+        adminUser.NormalizedEmail = adminUser.Email.ToUpper();
+        adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, pwd);
 
-            var adminUser = new IdentityUser
-            {
-                UserName = "a@a.a",
-                Email = "a@a.a",
-                EmailConfirmed = true,
-            };
-            adminUser.NormalizedUserName = adminUser.UserName.ToUpper();
-            adminUser.NormalizedEmail = adminUser.Email.ToUpper();
-            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, pwd);
+        var financeUser = new IdentityUser
+        {
+            UserName = "f@f.f",
+            Email = "f@f.f",
+            EmailConfirmed = true,
+        };
+        financeUser.NormalizedUserName = financeUser.UserName.ToUpper();
+        financeUser.NormalizedEmail = financeUser.Email.ToUpper();
+        financeUser.PasswordHash = passwordHasher.HashPassword(financeUser, pwd);
 
-            var financeUser = new IdentityUser
-            {
-                UserName = "f@f.f",
-                Email = "f@f.f",
-                EmailConfirmed = true,
-            };
-            financeUser.NormalizedUserName = financeUser.UserName.ToUpper();
-            financeUser.NormalizedEmail = financeUser.Email.ToUpper();
-            financeUser.PasswordHash = passwordHasher.HashPassword(financeUser, pwd);
-
-            List<IdentityUser> users = new List<IdentityUser>() {
+        List<IdentityUser> users = new List<IdentityUser>() {
                 adminUser,
                 financeUser
             };
 
-            modelBuilder.Entity<IdentityUser>().HasData(users);
+        modelBuilder.Entity<IdentityUser>().HasData(users);
 
-            var adminRole = new IdentityRole
-            {
-                Name = "Admin",
-                NormalizedName = "ADMIN"
-            };
-            var financeRole = new IdentityRole
-            {
-                Name = "Finance",
-                NormalizedName = "FINANCE"
-            };
+        var adminRole = new IdentityRole
+        {
+            Name = "Admin",
+            NormalizedName = "ADMIN"
+        };
+        var financeRole = new IdentityRole
+        {
+            Name = "Finance",
+            NormalizedName = "FINANCE"
+        };
 
-            List<IdentityRole> roles = new List<IdentityRole>() {
+        List<IdentityRole> roles = new List<IdentityRole>() {
                 adminRole,
                 financeRole
             };
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
+        modelBuilder.Entity<IdentityRole>().HasData(roles);
 
-            var adminUserRole = new IdentityUserRole<string>
-            {
-                RoleId = adminRole.Id,
-                UserId = adminUser.Id
-            };
-            var financeUserRole = new IdentityUserRole<string>
-            {
-                RoleId = financeRole.Id,
-                UserId = financeUser.Id
-            };
+        var adminUserRole = new IdentityUserRole<string>
+        {
+            RoleId = adminRole.Id,
+            UserId = adminUser.Id
+        };
+        var financeUserRole = new IdentityUserRole<string>
+        {
+            RoleId = financeRole.Id,
+            UserId = financeUser.Id
+        };
 
-            List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>() {
+        List<IdentityUserRole<string>> userRoles = new List<IdentityUserRole<string>>() {
                 adminUserRole,
                 financeUserRole
             };
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);
+        modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);
+    }
+
+    private static IEnumerable<T> GetCsvData<T>(string filename)
+    {
+        string[] p = { Directory.GetCurrentDirectory(), "wwwroot", filename };
+        var csvFilePath = Path.Combine(p);
+
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            PrepareHeaderForMatch = args => args.Header,
+            HeaderValidated = null,
+            MissingFieldFound = null
+        };
+
+        var data = new List<T>().AsEnumerable();
+        using (var reader = new StreamReader(csvFilePath))
+        {
+            using (var csvReader = new CsvReader(reader, config))
+            {
+                data = csvReader.GetRecords<T>().ToList();
+            }
         }
+        return data;
     }
 }
+

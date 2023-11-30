@@ -45,13 +45,13 @@ namespace NFPMSLib.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "95bc2563-6dad-42bc-a1d3-1aef37e56fa2",
+                            Id = "04e352e7-6be9-46f2-84b1-82cfff9e1762",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9ab2f5a3-7a14-441d-946d-92e8ee289f2b",
+                            Id = "9f72f812-5720-4b20-a6f0-8d49a7df48ab",
                             Name = "Finance",
                             NormalizedName = "FINANCE"
                         });
@@ -146,33 +146,33 @@ namespace NFPMSLib.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "999bbc88-78c8-4f66-9cf9-b193a1565d3f",
+                            Id = "ce4386ef-1f5e-4cc1-b2f0-ca94e5fa2d3e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4b3a5ea9-c3a7-4caf-b602-c311374cc53d",
+                            ConcurrencyStamp = "d855daac-3c06-4d80-9a0a-adabddb5be35",
                             Email = "a@a.a",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "A@A.A",
                             NormalizedUserName = "A@A.A",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH8VOibXDdrzm8T8H43Sd1i2YyerYXlnM+fLsfHk83DcsVYWy6MiAxNAmae83exisg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKuGEgPTEnlKQBPlJXwkNEyiZx/fykiNSucqbC9ms49+iZlBjhMZppjp5AGAwv3pTQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e37be858-f51c-4490-8ee8-062183d142ea",
+                            SecurityStamp = "e9bd2d0f-ae17-4748-9096-e3d43e312abb",
                             TwoFactorEnabled = false,
                             UserName = "a@a.a"
                         },
                         new
                         {
-                            Id = "538a350c-46d1-4cf8-85ef-3629c3935025",
+                            Id = "0840c51f-ad63-4480-aa9c-b3665423530f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b1ad37f9-da26-4029-ad36-d4037756938f",
+                            ConcurrencyStamp = "6765bd05-0c0c-4cc9-bde4-2ad66b239c24",
                             Email = "f@f.f",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "F@F.F",
                             NormalizedUserName = "F@F.F",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHqN5PstTHDicWTDqeLYTL2wYazpxkafF627FOoVnu/5QAShRNDL++p94vc5jmv3tA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECf5wI7oZz/+pcKVwY2OZZ6NlqfxCpEh63o0gaXnVdGfQHC8KSJZmozl2go8n6QfEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "72b95a34-4283-4028-8063-13433502635b",
+                            SecurityStamp = "331b7215-9429-4795-91fa-e841ea2fc8d9",
                             TwoFactorEnabled = false,
                             UserName = "f@f.f"
                         });
@@ -242,13 +242,13 @@ namespace NFPMSLib.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "999bbc88-78c8-4f66-9cf9-b193a1565d3f",
-                            RoleId = "95bc2563-6dad-42bc-a1d3-1aef37e56fa2"
+                            UserId = "ce4386ef-1f5e-4cc1-b2f0-ca94e5fa2d3e",
+                            RoleId = "04e352e7-6be9-46f2-84b1-82cfff9e1762"
                         },
                         new
                         {
-                            UserId = "538a350c-46d1-4cf8-85ef-3629c3935025",
-                            RoleId = "9ab2f5a3-7a14-441d-946d-92e8ee289f2b"
+                            UserId = "0840c51f-ad63-4480-aa9c-b3665423530f",
+                            RoleId = "9f72f812-5720-4b20-a6f0-8d49a7df48ab"
                         });
                 });
 
@@ -327,41 +327,134 @@ namespace NFPMSLib.Data.Migrations
                         new
                         {
                             AccountNo = 1,
-                            City = "Foxville",
-                            Country = "Canada",
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 124, DateTimeKind.Local).AddTicks(9930),
-                            CreatedBy = "System Generated",
-                            Email = "sam@fox.com",
-                            FirstName = "Sam",
-                            LastName = "Fox",
-                            PostalCode = "F0X 1F0",
-                            Street = "123 Fox Avenue"
+                            City = "California",
+                            Country = "USA",
+                            Email = "tm@gmail.com",
+                            FirstName = "Tom",
+                            LastName = "Max",
+                            PostalCode = "12345",
+                            Street = "1000 Main St"
                         },
                         new
                         {
                             AccountNo = 2,
-                            City = "Riverdale",
-                            Country = "Canada",
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 124, DateTimeKind.Local).AddTicks(9972),
-                            CreatedBy = "System Generated",
-                            Email = "ann@day.com",
+                            City = "Portland",
+                            Country = "USA",
+                            Email = "af@gmail.com",
                             FirstName = "Ann",
-                            LastName = "Day",
-                            PostalCode = "R1V 3R4",
-                            Street = "2123 River Blvd"
+                            LastName = "Fay",
+                            PostalCode = "10087",
+                            Street = "2000 Main St"
                         },
                         new
                         {
                             AccountNo = 3,
-                            City = "Winnipeg",
+                            City = "Tacoma",
+                            Country = "USA",
+                            Email = "js@gmail.com",
+                            FirstName = "Joe",
+                            LastName = "Sun",
+                            PostalCode = "28762",
+                            Street = "3000 Main St"
+                        },
+                        new
+                        {
+                            AccountNo = 4,
+                            City = "Seattle",
+                            Country = "USA",
+                            Email = "sf@gmail.com",
+                            FirstName = "Sue",
+                            LastName = "Fox",
+                            PostalCode = "38762",
+                            Street = "4000 Main St"
+                        },
+                        new
+                        {
+                            AccountNo = 5,
+                            City = "New York",
+                            Country = "USA",
+                            Email = "br@gmail.com",
+                            FirstName = "Ben",
+                            LastName = "Ray",
+                            PostalCode = "87692",
+                            Street = "5000 Main St"
+                        },
+                        new
+                        {
+                            AccountNo = 6,
+                            City = "Vancouver",
                             Country = "Canada",
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 124, DateTimeKind.Local).AddTicks(9975),
-                            CreatedBy = "System Generated",
-                            Email = "mike@smith.com",
-                            FirstName = "Michael",
-                            LastName = "Smith",
-                            PostalCode = "R3R 3R3",
-                            Street = "8080 Main Street"
+                            Email = "zc@outlook.com",
+                            FirstName = "Zoe",
+                            LastName = "Cox",
+                            PostalCode = "A1B 2C3",
+                            Street = "2011 Broadway St"
+                        },
+                        new
+                        {
+                            AccountNo = 7,
+                            City = "Vancouver",
+                            Country = "Canada",
+                            Email = "sr@outlook.com",
+                            FirstName = "Sam",
+                            LastName = "Ray",
+                            PostalCode = "A3B 2D3",
+                            Street = "3011 Broadway St"
+                        },
+                        new
+                        {
+                            AccountNo = 8,
+                            City = "Richmond",
+                            Country = "Canada",
+                            Email = "da@outlook.com",
+                            FirstName = "Dan",
+                            LastName = "Ash",
+                            PostalCode = "F9K 6E6",
+                            Street = "4011 Kingsway"
+                        },
+                        new
+                        {
+                            AccountNo = 9,
+                            City = "Richmond",
+                            Country = "Canada",
+                            Email = "pl@outlook.com",
+                            FirstName = "Pat",
+                            LastName = "Lee",
+                            PostalCode = "P4L 5K1",
+                            Street = "5011 Kingsway"
+                        },
+                        new
+                        {
+                            AccountNo = 10,
+                            City = "Surrey",
+                            Country = "Canada",
+                            Email = "kd@bcit.com",
+                            FirstName = "Kim",
+                            LastName = "Day",
+                            PostalCode = "K6D 6B0",
+                            Street = "6011 Oakbridge Ave"
+                        },
+                        new
+                        {
+                            AccountNo = 11,
+                            City = "Surrey",
+                            Country = "Canada",
+                            Email = "tr@bcit.com",
+                            FirstName = "Tim",
+                            LastName = "Rex",
+                            PostalCode = "A6B 4B4",
+                            Street = "7011 Valley Rd"
+                        },
+                        new
+                        {
+                            AccountNo = 12,
+                            City = "Whiterock",
+                            Country = "Canada",
+                            Email = "rr@bcit.com",
+                            FirstName = "Rob",
+                            LastName = "Ram",
+                            PostalCode = "M1H 9T9",
+                            Street = "8011 Creek St"
                         });
                 });
 
@@ -421,9 +514,9 @@ namespace NFPMSLib.Data.Migrations
                             TransactionId = 1,
                             AccountNo = 1,
                             Amount = 10000.00m,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(655),
+                            Created = new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9621),
                             CreatedBy = "System Generated",
-                            Date = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(650),
+                            Date = new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9568),
                             Notes = "This is a test donation",
                             PaymentMethodId = 1,
                             TransactionTypeId = 1
@@ -433,9 +526,9 @@ namespace NFPMSLib.Data.Migrations
                             TransactionId = 2,
                             AccountNo = 2,
                             Amount = 50000.00m,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(662),
+                            Created = new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9633),
                             CreatedBy = "System Generated",
-                            Date = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(660),
+                            Date = new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9630),
                             Notes = "This is a test donation",
                             PaymentMethodId = 2,
                             TransactionTypeId = 2
@@ -445,9 +538,9 @@ namespace NFPMSLib.Data.Migrations
                             TransactionId = 3,
                             AccountNo = 3,
                             Amount = 83000.00m,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(666),
+                            Created = new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9641),
                             CreatedBy = "System Generated",
-                            Date = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(665),
+                            Date = new DateTime(2023, 11, 21, 22, 32, 38, 920, DateTimeKind.Local).AddTicks(9638),
                             Notes = "This is a test donation",
                             PaymentMethodId = 3,
                             TransactionTypeId = 3
@@ -484,44 +577,27 @@ namespace NFPMSLib.Data.Migrations
                         new
                         {
                             PaymentMethodId = 1,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(498),
-                            CreatedBy = "System Generated",
-                            Name = "Direct Deposit"
+                            Name = "PayPal"
                         },
                         new
                         {
                             PaymentMethodId = 2,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(505),
-                            CreatedBy = "System Generated",
                             Name = "Cheque"
                         },
                         new
                         {
                             PaymentMethodId = 3,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(507),
-                            CreatedBy = "System Generated",
-                            Name = "PayPal"
+                            Name = "Money Order"
                         },
                         new
                         {
                             PaymentMethodId = 4,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(510),
-                            CreatedBy = "System Generated",
-                            Name = "Cash"
+                            Name = "Wire Transfer"
                         },
                         new
                         {
                             PaymentMethodId = 5,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(512),
-                            CreatedBy = "System Generated",
-                            Name = "Apple Pay"
-                        },
-                        new
-                        {
-                            PaymentMethodId = 6,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(523),
-                            CreatedBy = "System Generated",
-                            Name = "E-Transfer"
+                            Name = "Direct Deposit"
                         });
                 });
 
@@ -559,34 +635,32 @@ namespace NFPMSLib.Data.Migrations
                         new
                         {
                             TransactionTypeId = 1,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(311),
-                            CreatedBy = "System Generated",
                             Description = "Donations made without a specific purpose",
                             Name = "General Donation"
                         },
                         new
                         {
                             TransactionTypeId = 2,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(317),
-                            CreatedBy = "System Generated",
-                            Description = "Donations made for homeless people",
-                            Name = "Food for homeless"
+                            Description = "Donations made for food",
+                            Name = "Food"
                         },
                         new
                         {
                             TransactionTypeId = 3,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(319),
-                            CreatedBy = "System Generated",
-                            Description = "Donations for the purpose of upgrading the gym",
-                            Name = "Repair of Gym"
+                            Description = "Donations made for medical expenses",
+                            Name = "Medical"
                         },
                         new
                         {
                             TransactionTypeId = 4,
-                            Created = new DateTime(2023, 11, 17, 23, 32, 6, 125, DateTimeKind.Local).AddTicks(321),
-                            CreatedBy = "System Generated",
-                            Description = "Donations for homeless people",
-                            Name = "Clothings for homeless"
+                            Description = "Donations made for education",
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            TransactionTypeId = 5,
+                            Description = "Donations made for children",
+                            Name = "Donation for Children"
                         });
                 });
 
