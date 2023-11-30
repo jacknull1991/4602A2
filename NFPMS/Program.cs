@@ -1,3 +1,5 @@
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,8 @@ builder.Services.AddHttpContextAccessor();
 // MudBlazor
 builder.Services.AddMudServices();
 
+builder.Services.AddLocalization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,6 +46,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseRequestLocalization("en-US");
 
 app.UseAuthorization();
 

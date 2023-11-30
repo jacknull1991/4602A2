@@ -19,7 +19,7 @@
     <DialogContent>
         <MudTextField @bind-Value="TransactionType.Name" Label="Name" ReadOnly="@(Mode=="del")" Required=true/>
         <ValidationMessage For="@(() => TransactionType.Name)" />
-        <MudTextField @bind-Value="TransactionType.Description" Label="Name" ReadOnly="@(Mode=="del")" Required=true/>
+        <MudTextField @bind-Value="TransactionType.Description" Label="Description" ReadOnly="@(Mode=="del")" Required=true/>
         <ValidationMessage For="@(() => TransactionType.Description)" />
     </DialogContent>
     <DialogActions>

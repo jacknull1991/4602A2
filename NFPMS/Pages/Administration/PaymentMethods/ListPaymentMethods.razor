@@ -1,6 +1,7 @@
 @page "/payments"
 @inject AdminService adminService
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Settings - Payment Methods</PageTitle>
@@ -25,8 +26,8 @@
             <TemplateColumn>
                 <CellTemplate>
                     <MudStack Row>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Color="@Color.Info" Title="Edit" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Color="@Color.Error" Title="delete" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -63,6 +64,7 @@
 
         if (!result.Canceled) {
             paymentMethod = copy;
+            Snackbar.Add("Payment method updated successfully", Severity.Success);
         }
     }
 
@@ -76,6 +78,7 @@
 
         if (!result.Canceled) {
             paymentMethods.Remove(paymentMethod);
+            Snackbar.Add("Payment method deleted successfully", Severity.Success);
         }
     }
 
@@ -90,6 +93,7 @@
 
         if (!result.Canceled) {
             paymentMethods.Add((PaymentMethod) result.Data);
+            Snackbar.Add("New payment method added successfully", Severity.Success);
         }
     }
 }

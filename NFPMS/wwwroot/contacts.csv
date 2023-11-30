@@ -1,0 +1,13 @@
+AccountNo,FirstName,LastName,Email,Street,City,PostalCode,Country
+1,Tom,Max,tm@gmail.com,1000 Main St,California,12345,USA
+2,Ann,Fay,af@gmail.com,2000 Main St,Portland,10087,USA
+3,Joe,Sun,js@gmail.com,3000 Main St,Tacoma,28762,USA
+4,Sue,Fox,sf@gmail.com,4000 Main St,Seattle,38762,USA
+5,Ben,Ray,br@gmail.com,5000 Main St,New York,87692,USA
+6,Zoe,Cox,zc@outlook.com,2011 Broadway St,Vancouver,A1B 2C3,Canada
+7,Sam,Ray,sr@outlook.com,3011 Broadway St,Vancouver,A3B 2D3,Canada
+8,Dan,Ash,da@outlook.com,4011 Kingsway,Richmond,F9K 6E6,Canada
+9,Pat,Lee,pl@outlook.com,5011 Kingsway,Richmond,P4L 5K1,Canada
+10,Kim,Day,kd@bcit.com,6011 Oakbridge Ave,Surrey,K6D 6B0,Canada
+11,Tim,Rex,tr@bcit.com,7011 Valley Rd,Surrey,A6B 4B4,Canada
+12,Rob,Ram,rr@bcit.com,8011 Creek St,Whiterock,M1H 9T9,Canada

@@ -1,0 +1,6 @@
+PaymentMethodId,Name
+1,PayPal
+2,Cheque
+3,Money Order
+4,Wire Transfer
+5,Direct Deposit

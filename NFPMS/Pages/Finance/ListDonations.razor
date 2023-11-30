@@ -1,6 +1,7 @@
 @page "/donations"
 @inject FinanceService financeService
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 @attribute [Authorize(Roles = "Admin, Finance")]
 
 <PageTitle>Donations</PageTitle>
@@ -19,18 +20,21 @@
             <PropertyColumn Property="x => x.Contact!.FirstName + ' ' + x.Contact!.LastName" Title="Donor" />
             <PropertyColumn Property="x => x.PaymentMethod!.Name" Title="Donated Via" />
             <PropertyColumn Property="x => x.TransactionType!.Name" Title="Category" />
-            <PropertyColumn Property="x => x.Amount" Title="Amount" Format="c"/>
+            <PropertyColumn Property="x => x.Amount" Title="Amount" Format="c" Culture="@(new System.Globalization.CultureInfo("en-US"))"/>
             <PropertyColumn Property="x => x.Date" Title="Date" Format="dddd, dd MMMM yyyy"/>
             <PropertyColumn Property="x => x.Notes" Title="Notes" />  
             <TemplateColumn>
                 <CellTemplate>
                     <MudStack Row>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Color="@Color.Info" Title="Edit" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Color="@Color.Error" Title="delete" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Donation"/>
+        </PagerContent>
     </MudDataGrid>
 </MudContainer>
 
@@ -54,6 +58,7 @@
 
         if (!result.Canceled) {
             donations!.Add((Donation) result.Data);
+            Snackbar.Add("New donation added successfully", Severity.Success);
         }
     }
 
@@ -69,6 +74,7 @@
 
         if (!result.Canceled) {
             donation = copy;
+            Snackbar.Add("Donation updated successfully", Severity.Success);
         }
     }
 
@@ -83,6 +89,7 @@
 
         if (!result.Canceled) {
             donations!.Remove(donation);
+            Snackbar.Add("Donation deleted successfully", Severity.Success);
         }
     }
 }

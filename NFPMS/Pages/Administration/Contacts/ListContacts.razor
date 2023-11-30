@@ -2,6 +2,7 @@
 @inject AdminService adminService
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Contacts</PageTitle>
@@ -31,15 +32,18 @@
             <TemplateColumn>
                 <CellTemplate>
                     <MudStack Row>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Color="@Color.Info" Title="Edit" Icon="@Icons.Material.Outlined.Edit" OnClick="@((e)=> HandleEdit(context.Item))"/>
+                        <MudIconButton Size="@Size.Small" Color="@Color.Error" Title="delete" Icon="@Icons.Material.Outlined.Delete" OnClick="@((e) => HandleDelete(context.Item))"/>
                         <MudTooltip Text="Show Tax Receipts">
-                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Article" OnClick="@((e) => HandleTaxReceipts(context.Item))"/>
+                            <MudIconButton Size="@Size.Small" Title="Receipts" Icon="@Icons.Material.Filled.Article" OnClick="@((e) => HandleTaxReceipts(context.Item))"/>
                         </MudTooltip>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Contact"/>
+        </PagerContent>
     </MudDataGrid>
 </MudContainer>
 
@@ -86,6 +90,7 @@
 
         if (!result.Canceled) {
             contacts!.Add((Contact) result.Data);
+            Snackbar.Add("New contact added successfully", Severity.Success);
         }
     }
 
@@ -101,6 +106,7 @@
 
         if (!result.Canceled) {
             contact = copy;
+            Snackbar.Add("Contact info updated successfully", Severity.Success);
         }
     }
 
@@ -115,6 +121,7 @@
 
         if (!result.Canceled) {
             contacts!.Remove(contact);
+            Snackbar.Add("Contact deleted successfully", Severity.Success);
         }
     }
 

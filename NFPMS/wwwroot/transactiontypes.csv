@@ -1,0 +1,6 @@
+TransactionTypeId,Name,Description
+1,General Donation,Donations made without a specific purpose
+2,Food,Donations made for food
+3,Medical,Donations made for medical expenses
+4,Education,Donations made for education
+5,Donation for Children,Donations made for children
