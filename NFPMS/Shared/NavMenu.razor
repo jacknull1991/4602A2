@@ -1,12 +1,17 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+    <MudDivider />
     <AuthorizeView Roles="Admin, Finance">
     <MudNavLink Href="/donations" Match="NavLinkMatch.Prefix">Donations</MudNavLink>
+    <MudDivider />
     <AuthorizeView Roles="Admin" Context="innerContext">
     <MudNavGroup Title="Settings" Expanded="true">
         <MudNavLink Href="/contacts"  Match="NavLinkMatch.Prefix">Contacts</MudNavLink>
+        <MudDivider DividerType="DividerType.Middle"/>
         <MudNavLink Href="/payments"  Match="NavLinkMatch.Prefix">Payment</MudNavLink>
+        <MudDivider DividerType="DividerType.Middle"/>
         <MudNavLink Href="/categories"  Match="NavLinkMatch.Prefix">Transaction</MudNavLink>
+        <MudDivider DividerType="DividerType.Middle"/>
         <MudNavLink Href="/reports/yearlyreport"  Match="NavLinkMatch.Prefix">Report</MudNavLink>
     </MudNavGroup>
     </AuthorizeView>

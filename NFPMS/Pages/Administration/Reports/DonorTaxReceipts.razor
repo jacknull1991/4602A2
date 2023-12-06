@@ -1,4 +1,16 @@
 @page "/reports/receipts/{id:int}"
+
+@using iText.Kernel.Pdf
+@using iText.Kernel.Geom;
+@using iText.Kernel.Pdf.Canvas.Draw;
+@using iText.Layout;
+@using iText.Layout.Element;
+@using iText.Layout.Properties;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using System.Text.Json;
+@inject IJSRuntime JS
+
 @inject AdminService adminService
 @inject NavigationManager navigationManager
 @attribute [Authorize(Roles = "Admin, Finance")]
@@ -6,6 +18,7 @@
 <PageTitle>Tax Receipts</PageTitle>
 
 <h1>Tax Receipts for Account No: @Id</h1>
+<MudButton OnClick="@ExportToPdf" Color="@Color.Info" Class="add-item-btn mr-5">Export to PDF</MudButton>
 <hr />
 
 @if (errorMessage != null && errorMessage != "")
@@ -49,5 +62,53 @@
         } catch (Exception ex) {
             errorMessage = ex.Message;
         }
+    }
+
+    private async Task ExportToPdf()
+    {
+        MemoryStream ms = new MemoryStream();
+        PdfWriter writer = new PdfWriter(ms);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4, false);
+        writer.SetCloseStream(false);
+
+        Paragraph header = new Paragraph("NFP Charity Organization")
+            .SetTextAlignment(TextAlignment.CENTER)
+            .SetFontSize(20);
+        
+        document.Add(header);
+
+        Paragraph subheader = new Paragraph("1234 Main Street, Vancouver, BC, V6A 1A1")
+            .SetTextAlignment(TextAlignment.CENTER)
+            .SetFontSize(12);
+        
+        document.Add(subheader);
+
+        document.Add(new Paragraph(""));
+        document.Add(new LineSeparator(new SolidLine()));
+
+        foreach(var receipt in taxReceipts)
+        {
+            document.Add(new Paragraph(""));
+            document.Add(new Paragraph("Receipt #: " + receipt.ReceiptNumber).SetTextAlignment(TextAlignment.RIGHT));
+            document.Add(new Paragraph("Donated by: " + receipt.DonorName));
+            document.Add(new Paragraph("Address: " + receipt.Address));
+            document.Add(new Paragraph(""));
+            document.Add(new Paragraph("Date of donation: " + receipt.DonationDate?.ToString("dddd, dd MMMM yyyy")));
+            document.Add(new Paragraph("Donated via: " + receipt.TransactionType));
+            document.Add(new Paragraph("Donation amount: " + string.Format("{0:C}", receipt.Amount)));
+            document.Add(new Paragraph(""));
+            document.Add(new Paragraph("Date: " + receipt.IssueDate?.ToString("dddd, dd MMMM yyyy")).SetTextAlignment(TextAlignment.RIGHT));
+            document.Add(new Paragraph(""));
+            document.Add(new LineSeparator(new SolidLine()));
+        }
+
+        document.Close();
+
+        byte[] byteInfo = ms.ToArray();
+        ms.Write(byteInfo, 0, byteInfo.Length);
+        ms.Position = 0;
+
+        await JS.InvokeAsync<object>("saveAsFile", "TaxReceipt.pdf", Convert.ToBase64String(byteInfo));
     }
 }
